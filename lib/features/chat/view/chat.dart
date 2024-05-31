@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/features/chat/widgets/messages.dart';
+import 'package:my_app/repositories/chat/chat_repository.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -12,9 +14,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Чат'),
-      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.download),
+          onPressed: () {
+            print('PRESSED');
+            CryptoCoinsRepository().getCoinsList();
+          }),
       body: Column(
         children: [
           Expanded(
@@ -60,62 +65,10 @@ class _ChatScreenState extends State<ChatScreen> {
         );
         _chatHistory.insert(
           0,
-          BotMessage(text: message),
+          BotMessage(text: 'Ответ: $message'),
         );
         _messageController.clear();
       });
     }
   }
-}
-
-class Message extends StatelessWidget {
-  final String text;
-  final Widget avatar;
-
-  const Message({required this.text, required this.avatar});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          avatar,
-          SizedBox(width: 8),
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              text,
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HumanMessage extends Message {
-  HumanMessage({required String text})
-      : super(
-          text: text,
-          avatar: CircleAvatar(
-            child: Icon(Icons.person),
-          ),
-        );
-}
-
-class BotMessage extends Message {
-  BotMessage({required String text})
-      : super(
-          text: text,
-          avatar: CircleAvatar(
-            child: Icon(Icons.android),
-          ),
-        );
 }

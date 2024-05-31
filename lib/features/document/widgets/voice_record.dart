@@ -133,3 +133,19 @@ class _VoiceRecordState extends State<VoiceRecord> {
     super.dispose();
   }
 }
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text('Документы'),
+      ),
+      body: Stack(
+        children: <Widget>[
+          VoiceRecord(),
+          // Остальное содержимое экрана здесь
+        ],
+      ),
+    ),
+  ));
+}

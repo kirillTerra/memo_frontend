@@ -6,7 +6,7 @@ final lightTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     iconTheme: IconThemeData(color: Colors.black), // Черные иконки в AppBar
     elevation: 0,
-    backgroundColor: Color.fromARGB(255, 24, 176, 227), // Светлый фон для AppBar
+    backgroundColor: Color(0xFFF8F8F8), // Светлый фон для AppBar
     titleTextStyle: TextStyle(
       color: Colors.black,
       fontSize: 20,
