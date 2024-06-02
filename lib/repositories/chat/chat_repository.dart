@@ -1,12 +1,20 @@
 import 'package:dio/dio.dart';
 
-class CryptoCoinsRepository {
-  Future<void> getCoinsList() async {
-    print('HERE');
+class ChatAgent {
+  Future<String?> sendMessage(String message) async {
+    print('Sending message: $message');
     try {
-      final response = await Dio()
-          .get('https://65c5-93-175-6-244.ngrok-free.app/hello_world');
-      print(response.toString());
+      final response = await Dio().post(
+        'https://ce01-93-175-6-244.ngrok-free.app/echo',
+        data: {'message': message},
+      );
+      // Предполагается, что ответ содержит ключ 'message'
+      print("taken");
+      if (response.data != null && response.data['message'] != null) {
+        return response.data['message'];
+      } else {
+        return 'No message in response';
+      }
     } catch (e) {
       if (e is DioError) {
         // Обработка ошибок Dio
@@ -15,9 +23,11 @@ class CryptoCoinsRepository {
         if (e.response != null) {
           print('Response: ${e.response?.data}');
         }
+        return 'DioError: ${e.message}';
       } else {
         // Обработка других ошибок
         print('Error: $e');
+        return 'Error: $e';
       }
     }
   }

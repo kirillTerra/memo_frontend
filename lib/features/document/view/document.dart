@@ -14,6 +14,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 10.0,
+      ),
       body: Stack(
         children: [
           Column(

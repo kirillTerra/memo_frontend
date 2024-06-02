@@ -14,12 +14,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.download),
-          onPressed: () {
-            print('PRESSED');
-            CryptoCoinsRepository().getCoinsList();
-          }),
+      appBar: AppBar(
+        toolbarHeight: 10.0,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -56,19 +53,22 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _sendMessage(String message) {
+  void _sendMessage(String message) async {
     if (message.isNotEmpty) {
       setState(() {
         _chatHistory.insert(
           0,
           HumanMessage(text: message),
         );
-        _chatHistory.insert(
-          0,
-          BotMessage(text: 'Ответ: $message'),
-        );
         _messageController.clear();
       });
     }
+    final botAnswer = await ChatAgent().sendMessage(message);
+    setState(() {
+      _chatHistory.insert(
+        0,
+        BotMessage(text: 'Ответ: $botAnswer'),
+      );
+    });
   }
 }
