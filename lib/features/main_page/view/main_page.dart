@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_app/features/chat/chat.dart';
-import 'package:my_app/features/document/document.dart';
+// import 'package:my_app/features/document/document.dart';
 import 'package:my_app/features/personal_account/personal_account.dart';
+import 'package:my_app/features/document_list/document_list.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,9 +14,9 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    PersonalAccountScreen(),
     ChatScreen(),
-    DocumentScreen(),
+    DocumentListScreen(),
+    PersonalAccountScreen(),
   ];
 
   @override

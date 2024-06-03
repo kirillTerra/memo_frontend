@@ -15,7 +15,16 @@ class _DocumentScreenState extends State<DocumentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 10.0,
+        // Устанавливаем стандартную высоту панели инструментов
+        toolbarHeight: kToolbarHeight,
+        // Добавляем кнопку "назад"
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        // Устанавливаем цвет фона AppBar, чтобы он совпадал с дизайном (если необходимо)
       ),
       body: Stack(
         children: [
