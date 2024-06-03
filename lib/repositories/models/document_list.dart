@@ -26,13 +26,13 @@ class Document {
   final String oid;
   final String name;
   final String createdAt;
-  final List<FieldModel>? fields;
+  final List<FieldModel> fields;
 
   Document({
     required this.oid,
     required this.name,
     required this.createdAt,
-    this.fields,
+    required this.fields,
   });
 
   factory Document.fromJson(Map<String, dynamic> json) {

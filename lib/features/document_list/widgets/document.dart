@@ -4,10 +4,12 @@ import 'package:my_app/repositories/models/document_list.dart';
 class DocumentWidget extends StatelessWidget {
   final Document document;
   final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   const DocumentWidget({
     required this.document,
     required this.onTap,
+    required this.onDelete,
   });
 
   @override
@@ -28,17 +30,28 @@ class DocumentWidget extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '$document.createdAt',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    document.name,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    document.createdAt,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 5),
-            Text(
-              document.name,
-              style: TextStyle(fontSize: 16),
+            IconButton(
+              icon: Icon(Icons.close, color: Colors.red),
+              onPressed: onDelete,
             ),
           ],
         ),

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:my_app/features/document/widgets/user_bold.dart';
 import 'package:my_app/features/document/widgets/voice_record.dart';
 import 'package:my_app/features/document/widgets/add_user_bold_button.dart';
+import 'package:my_app/repositories/models/document_list.dart';
 
 class DocumentScreen extends StatefulWidget {
+  final Document document;
+  DocumentScreen({required this.document});
+
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
 }

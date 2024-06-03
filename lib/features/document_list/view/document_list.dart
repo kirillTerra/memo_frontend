@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:my_app/features/document/document.dart';
 import 'package:my_app/repositories/document_list/document_list_repository.dart';
 import 'package:my_app/features/document_list/widgets/document.dart';
 import 'package:my_app/repositories/models/document_list.dart';
+import 'package:my_app/repositories/document_list/create_document.dart';
+import 'package:my_app/repositories/document_list/delete_document.dart';
 
 // Экран списка документов
 class DocumentListScreen extends StatefulWidget {
@@ -21,20 +24,17 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
 
   Future<void> _loadDocuments() async {
     _documents = await getDocumentList();
+    print('LOAD DOCUMENTS');
+    print(_documents.length);
     setState(() {});
   }
 
   Future<void> _addNewDocument() async {
     String? name = await _showNameInputDialog();
     if (name != null && name.isNotEmpty) {
+      Document document = await createDocument(name);
       setState(() {
-        _documents.add(Document(
-          oid: DateTime.now()
-              .millisecondsSinceEpoch
-              .toString(), // Генерация уникального oid
-          name: name,
-          createdAt: DateTime.now().toString(),
-        ));
+        _documents.add(document);
       });
     }
   }
@@ -79,6 +79,14 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     );
   }
 
+  void _deleteDocument(Document document) async {
+    await deleteDocument(document.oid);
+    setState(() {
+      _documents.remove(document);
+    });
+    print("DELTE SUCSESS");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,6 +129,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           return DocumentWidget(
             document: document,
             onTap: () => _openDocument(document),
+            onDelete: () => _deleteDocument(document),
           );
         },
       ),
