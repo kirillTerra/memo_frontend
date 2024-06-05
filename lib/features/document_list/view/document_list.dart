@@ -18,14 +18,13 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
 
   @override
   void initState() {
+    print('DOC LIST INIT');
     _loadDocuments();
     super.initState();
   }
 
   Future<void> _loadDocuments() async {
     _documents = await getDocumentList();
-    print('LOAD DOCUMENTS');
-    print(_documents.length);
     setState(() {});
   }
 
@@ -74,7 +73,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DocumentScreen(),
+        builder: (context) => DocumentScreen(
+          document: document,
+        ),
       ),
     );
   }

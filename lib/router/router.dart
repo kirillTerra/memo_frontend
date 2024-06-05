@@ -1,15 +1,9 @@
-// import 'package:my_app/features/personal_account/personal_account.dart';
-// // import 'package:my_app/features/personal_account/personal_account.dart';
-
-// final routes = {
-//   '/': (context) =>  PersonalAccountScreen(),
-// };
-
 import 'package:flutter/material.dart';
 import 'package:my_app/features/chat/chat.dart';
 import 'package:my_app/features/document/document.dart';
 import 'package:my_app/features/personal_account/personal_account.dart';
 import 'package:my_app/features/document_list/document_list.dart';
+import 'package:my_app/repositories/models/document_list.dart';
 
 class AppRouter {
   static const String personalAccount = '/personal_account';
@@ -24,7 +18,10 @@ class AppRouter {
       case chat:
         return MaterialPageRoute(builder: (_) => ChatScreen());
       case document:
-        return MaterialPageRoute(builder: (_) => DocumentScreen());
+        final Document document = settings.arguments as Document;
+        return MaterialPageRoute(
+          builder: (_) => DocumentScreen(document: document),
+        );
       case documentList:
         return MaterialPageRoute(builder: (_) => DocumentListScreen());
       default:

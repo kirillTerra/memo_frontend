@@ -3,23 +3,82 @@ import 'package:my_app/features/document/widgets/user_bold.dart';
 import 'package:my_app/features/document/widgets/voice_record.dart';
 import 'package:my_app/features/document/widgets/add_user_bold_button.dart';
 import 'package:my_app/repositories/models/document_list.dart';
+import 'package:my_app/repositories/documennt/get_document_fields.dart';
+import 'package:my_app/repositories/documennt/create_filed.dart';
+import 'package:my_app/repositories/documennt/delete_field.dart';
 
 class DocumentScreen extends StatefulWidget {
   final Document document;
-  DocumentScreen({required this.document});
+  const DocumentScreen({required this.document});
 
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
-  List<UserBoldData> userTexts = [];
+  List<FieldModel> userTexts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Инициализация на основе переданного документа
+    userTexts = widget.document.fields;
+    _loadDocumentFields();
+  }
+
+  Future<void> _loadDocumentFields() async {
+    userTexts = await getDocumentFields(widget.document.oid);
+    setState(() {});
+  }
+
+  void _addUserBold(String name) async {
+    FieldModel field = await createFieldRepository(name, widget.document.oid);
+    setState(() {
+      userTexts.add(field);
+    });
+  }
+
+  Future<void> _showAddTitleDialog() async {
+    final TextEditingController controller = TextEditingController();
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Введите название поля'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Название поля"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(controller.text);
+              },
+              child: const Text('ОК'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Отмена'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null && result.isNotEmpty) {
+      _addUserBold(result);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // Устанавливаем стандартную высоту панели инструментов
+        title: Text(widget.document.name),
         toolbarHeight: kToolbarHeight,
         // Добавляем кнопку "назад"
         leading: IconButton(
@@ -35,7 +94,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           Column(
             children: <Widget>[
               VoiceRecord(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: userTexts.length,
@@ -44,9 +103,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                       key: Key('${userTexts[index].hashCode}'),
                       data: userTexts[index],
                       onDelete: () {
-                        setState(() {
-                          userTexts.removeAt(index);
-                        });
+                        _handleDelete(index, userTexts[index], widget.document);
                       },
                     );
                   },
@@ -60,15 +117,20 @@ class _DocumentScreenState extends State<DocumentScreen> {
             left: 0,
             right: 0,
             child: AddUserBoldButton(
-              onPressed: () {
-                setState(() {
-                  userTexts.add(UserBoldData(title: '', text: ''));
-                });
-              },
+              onPressed: _showAddTitleDialog,
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _handleDelete(int index, FieldModel field, Document document) {
+    deleteFiled(document.oid, field.oid);
+    setState(() {
+      userTexts.removeAt(index);
+    });
+    // Выполнение вашей функции перед удалением
+    // Удаление элемента
   }
 }

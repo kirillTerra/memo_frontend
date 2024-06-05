@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:my_app/repositories/models/document_list.dart';
 
-Future<void> deleteDocument(String documentOid) async {
-  print('START DELETE DOCUMENT');
-  final url = 'https://4abe-93-175-6-18.ngrok-free.app/documents/$documentOid';
+Future<void> deleteFiled(String documentOid, String fieldOid) async {
+  print('START DELETE FIELD');
+  final url =
+      'https://4abe-93-175-6-18.ngrok-free.app/documents/$documentOid/fields?field_oid=$fieldOid';
   print('URL: $url');
   try {
     var dio = Dio();

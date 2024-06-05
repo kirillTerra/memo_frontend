@@ -1,8 +1,8 @@
 class FieldModel {
   final String oid;
-  final String name;
+  String name;
   final String createdAt;
-  final String value;
+  String value;
 
   FieldModel({
     required this.oid,
@@ -69,6 +69,33 @@ class ResponseData {
         itemsFromJson.map((item) => Document.fromJson(item)).toList();
 
     return ResponseData(
+      count: json['count'],
+      offset: json['offset'],
+      limit: json['limit'],
+      items: itemsList,
+    );
+  }
+}
+
+class ListFieldsResponse {
+  final int count;
+  final int offset;
+  final int limit;
+  final List<FieldModel> items;
+
+  ListFieldsResponse({
+    required this.count,
+    required this.offset,
+    required this.limit,
+    required this.items,
+  });
+
+  factory ListFieldsResponse.fromJson(Map<String, dynamic> json) {
+    var itemsJson = json['items'] as List;
+    List<FieldModel> itemsList =
+        itemsJson.map((item) => FieldModel.fromJson(item)).toList();
+
+    return ListFieldsResponse(
       count: json['count'],
       offset: json['offset'],
       limit: json['limit'],

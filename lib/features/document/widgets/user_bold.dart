@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-class UserBoldData {
-  String title;
-  String text;
-
-  UserBoldData({required this.title, required this.text});
-}
+import 'package:my_app/repositories/models/document_list.dart';
+import 'package:my_app/repositories/documennt/delete_field.dart';
 
 class UserBold extends StatelessWidget {
-  final UserBoldData data;
+  final FieldModel data;
   final VoidCallback onDelete;
 
   UserBold({required Key key, required this.data, required this.onDelete})
@@ -32,25 +27,18 @@ class UserBold extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               decoration: BoxDecoration(
                 color: Colors.blue[100],
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10.0)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
-                    child: TextFormField(
-                      initialValue: data.title,
-                      onChanged: (value) {
-                        data.title = value;
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите описание поля',
-                        labelText: 'Описание поля',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                    child: Text(
+                      data.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -58,17 +46,17 @@ class UserBold extends StatelessWidget {
                     children: <Widget>[
                       IconButton(
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: data.text));
+                          Clipboard.setData(ClipboardData(text: data.value));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Текст скопирован')),
+                            const SnackBar(content: Text('Текст скопирован')),
                           );
                         },
-                        icon: Icon(Icons.copy),
+                        icon: const Icon(Icons.copy),
                         iconSize: 16.0,
                       ),
                       IconButton(
                         onPressed: onDelete,
-                        icon: Icon(Icons.close),
+                        icon: const Icon(Icons.close),
                         iconSize: 16.0,
                       ),
                     ],
@@ -78,18 +66,18 @@ class UserBold extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(10.0)),
               ),
               child: TextFormField(
-                initialValue: data.text,
+                initialValue: data.value,
                 onChanged: (value) {
-                  data.text = value;
+                  data.value = value;
                 },
                 maxLines: null,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Введите текст',
                 ),
