@@ -4,7 +4,7 @@ import 'package:my_app/repositories/models/document_list.dart';
 Future<FieldModel> createFieldRepository(
     String name, String documentOid) async {
   final url =
-      'https://4abe-93-175-6-18.ngrok-free.app/documents/$documentOid/fields';
+      'https://6f93-93-175-6-244.ngrok-free.app/documents/$documentOid/fields';
   try {
     var dio = Dio();
     final response = await dio.post(url, data: {'name': name});

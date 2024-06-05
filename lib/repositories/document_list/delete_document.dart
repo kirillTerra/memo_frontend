@@ -3,7 +3,7 @@ import 'package:my_app/repositories/models/document_list.dart';
 
 Future<void> deleteDocument(String documentOid) async {
   print('START DELETE DOCUMENT');
-  final url = 'https://4abe-93-175-6-18.ngrok-free.app/documents/$documentOid';
+  final url = 'https://6f93-93-175-6-244.ngrok-free.app/documents/$documentOid';
   print('URL: $url');
   try {
     var dio = Dio();

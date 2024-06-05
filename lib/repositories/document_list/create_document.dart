@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:my_app/repositories/models/document_list.dart';
 
 Future<Document> createDocument(String name) async {
-  final url = 'https://4abe-93-175-6-18.ngrok-free.app/documents/therapist/';
+  final url = 'https://6f93-93-175-6-244.ngrok-free.app/documents/therapist/';
   try {
     var dio = Dio();
     final response = await dio.post(url, data: {'name': name});
