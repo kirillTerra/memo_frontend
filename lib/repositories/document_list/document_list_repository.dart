@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:my_app/repositories/models/document_list.dart';
 
 Future<List<Document>> getDocumentList() async {
-  final url = 'https://6f93-93-175-6-244.ngrok-free.app/documents/';
+  final url = 'https://4e0a-93-175-6-244.ngrok-free.app/documents/';
   try {
     final response = await Dio().get(url);
 

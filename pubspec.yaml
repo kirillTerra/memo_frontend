@@ -15,10 +15,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  audioplayers: ^0.20.1
-  flutter_sound: ^8.3.13
-  flutter_lints: ^2.0.0
+  # flutter_lints: ^2.0.0
   dio: ^4.0.6
+  path: ^1.8.0
+  path_provider: ^2.0.1
+  audioplayers: ^6.0.0
+  web: ^0.5.1
+  record: ^5.0.0
 
 flutter:
   uses-material-design: true

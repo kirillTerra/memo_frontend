@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'platform/audio_recorder_platform.dart';
+import 'rounded_box.dart'; // Импортируем RoundedBox
 
 class Recorder extends StatefulWidget {
   final void Function(String path) onStop;
@@ -100,7 +101,7 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
       debugPrint('Supported encoders are:');
       for (final e in AudioEncoder.values) {
         if (await _audioRecorder.isEncoderSupported(e)) {
-          debugPrint('- ${encoder.name}');
+          debugPrint('- ${e.name}'); // Исправлена ошибка вывода имени кодека
         }
       }
     }
@@ -110,25 +111,28 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Recorder'),
-        ),
-        body: Container(
-          padding: const EdgeInsets.all(16.0),
-          alignment: Alignment.topCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildRecordStopControl(),
-              const SizedBox(height: 20),
-              _buildPauseResumeControl(),
-              const SizedBox(height: 20),
-              _buildStatusText(),
-            ],
+    return RoundedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildRecordButton(),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              _recordState != RecordState.stop
+                  ? 'Запись идёт'
+                  : 'Начать запись приёма',
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
+          if (_recordState != RecordState.stop) ...[
+            const SizedBox(width: 16),
+            _buildPauseButton(),
+            const SizedBox(width: 16),
+            _buildStopButton(),
+          ],
+        ],
       ),
     );
   }
@@ -142,71 +146,69 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
     super.dispose();
   }
 
-  Widget _buildRecordStopControl() {
-    return ElevatedButton.icon(
-      onPressed: (_recordState != RecordState.stop) ? _stop : _start,
-      icon: Icon(
-        _recordState != RecordState.stop ? Icons.stop : Icons.mic,
-        color: Colors.white,
-      ),
-      label: Text(
-        _recordState != RecordState.stop ? 'Стоп' : 'Начать запись приёма',
-        style: const TextStyle(fontSize: 16),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            _recordState != RecordState.stop ? Colors.red : Colors.green,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      ),
-    );
-  }
-
-  Widget _buildPauseResumeControl() {
-    if (_recordState == RecordState.stop) {
-      return const SizedBox.shrink();
-    }
-
-    return ElevatedButton.icon(
-      onPressed: (_recordState == RecordState.pause) ? _resume : _pause,
-      icon: Icon(
-        _recordState == RecordState.pause ? Icons.play_arrow : Icons.pause,
-        color: Colors.white,
-      ),
-      label: Text(
-        _recordState == RecordState.pause ? 'Возобновить' : 'Пауза',
-        style: const TextStyle(fontSize: 16),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget _buildRecordButton() {
+    return InkWell(
+      onTap: () {
+        if (_recordState != RecordState.stop) {
+          _stop();
+        } else {
+          _start();
+        }
+      },
+      child: ClipOval(
+        child: Container(
+          width: 40,
+          height: 40,
+          color: Colors.red,
+          child: const Icon(Icons.fiber_manual_record, color: Colors.white),
+        ),
       ),
     );
   }
 
-  Widget _buildStatusText() {
-    if (_recordState != RecordState.stop) {
-      final minutes = _formatNumber(_recordDuration ~/ 60);
-      final seconds = _formatNumber(_recordDuration % 60);
-      return Text(
-        'Запись: $minutes : $seconds',
-        style: const TextStyle(color: Colors.black, fontSize: 16),
-      );
-    }
-
-    return const Text(
-      'Ожидание записи',
-      style: TextStyle(color: Colors.black, fontSize: 16),
+  Widget _buildPauseButton() {
+    return InkWell(
+      onTap: () {
+        if (_recordState == RecordState.pause) {
+          _resume();
+        } else {
+          _pause();
+        }
+      },
+      child: ClipOval(
+        child: Container(
+          width: 40,
+          height: 40,
+          color: Colors.yellow,
+          child: Icon(
+            _recordState == RecordState.pause ? Icons.play_arrow : Icons.pause,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 
-  String _formatNumber(int number) {
-    return number < 10 ? '0$number' : number.toString();
+  Widget _buildStopButton() {
+    return InkWell(
+      onTap: _stop,
+      child: ClipOval(
+        child: Container(
+          width: 40,
+          height: 40,
+          color: Colors.red,
+          child: const Icon(Icons.stop, color: Colors.white),
+        ),
+      ),
+    );
   }
 
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      setState(() => _recordDuration++);
+      setState(() {
+        _recordDuration++;
+      });
     });
   }
 }

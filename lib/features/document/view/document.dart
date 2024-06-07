@@ -6,6 +6,7 @@ import 'package:my_app/repositories/models/document_list.dart';
 import 'package:my_app/repositories/documennt/get_document_fields.dart';
 import 'package:my_app/repositories/documennt/create_filed.dart';
 import 'package:my_app/repositories/documennt/delete_field.dart';
+import 'package:flutter/foundation.dart';
 
 class DocumentScreen extends StatefulWidget {
   final Document document;
@@ -17,7 +18,7 @@ class DocumentScreen extends StatefulWidget {
 
 class _DocumentScreenState extends State<DocumentScreen> {
   List<FieldModel> userTexts = [];
-
+  String? audioPath;
   @override
   void initState() {
     super.initState();
@@ -93,7 +94,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
         children: [
           Column(
             children: <Widget>[
-              VoiceRecord(),
+              // VoiceRecord(),
               const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
@@ -110,6 +111,14 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 ),
               ),
             ],
+          ),
+          Recorder(
+            onStop: (path) {
+              if (kDebugMode) print('Recorded file path: $path');
+              setState(() {
+                audioPath = path;
+              });
+            },
           ),
           Positioned(
             bottom:

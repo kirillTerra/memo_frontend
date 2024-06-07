@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 Future<void> deleteFiled(String documentOid, String fieldOid) async {
   print('START DELETE FIELD');
   final url =
-      'https://6f93-93-175-6-244.ngrok-free.app/documents/$documentOid/fields?field_oid=$fieldOid';
+      'https://4e0a-93-175-6-244.ngrok-free.app/documents/$documentOid/fields?field_oid=$fieldOid';
   print('URL: $url');
   try {
     var dio = Dio();
