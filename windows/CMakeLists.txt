@@ -52,11 +52,19 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
-
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# === Plugins ===
+list(APPEND PLUGIN_LIST
+  audioplayers_windows
+  flutter_sound_windows
+)
+
+foreach(plugin ${PLUGIN_LIST})
+  add_subdirectory(${plugin} "plugins/${plugin}")
+endforeach()
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can

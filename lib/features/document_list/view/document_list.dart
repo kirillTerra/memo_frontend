@@ -45,20 +45,20 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Введите имя документа'),
+          title: const Text('Введите имя документа'),
           content: TextField(
             controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Имя документа"),
+            decoration: const InputDecoration(hintText: "Имя документа"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Отмена'),
+              child: const Text('Отмена'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text('ОК'),
+              child: const Text('ОК'),
               onPressed: () {
                 Navigator.pop(context, _textFieldController.text);
               },
@@ -107,7 +107,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 6.0,
@@ -115,7 +115,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                     ),
                   ],
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.add,
                     color: Colors.blue,
