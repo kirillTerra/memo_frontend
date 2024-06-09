@@ -15,7 +15,7 @@ class UserBold extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[50], // Светло-синий фон
+          color: Colors.blue[200], // Светло-синий фон
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: [
             BoxShadow(
@@ -31,15 +31,15 @@ class UserBold extends StatelessWidget {
           children: <Widget>[
             // Верхняя часть с заголовком
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 6.0, vertical: 2.0), // Уменьшение отступов
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
               decoration: BoxDecoration(
                 color: Colors.blue[200], // Синий цвет
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(15.0)),
               ),
               height:
-                  35, // Установка фиксированной высоты для уменьшения размера
+                  30, // Установка фиксированной высоты для уменьшения размера
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -48,7 +48,7 @@ class UserBold extends StatelessWidget {
                       data.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12.0, // Уменьшенный размер текста
+                        fontSize: 14.0, // Уменьшенный размер текста
                         color: Colors.black,
                       ),
                     ),
@@ -86,18 +86,17 @@ class UserBold extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(15.0)),
-                border: Border(
-                  left: BorderSide(color: Colors.blue[200]!, width: 8.0),
-                  right: BorderSide(color: Colors.blue[200]!, width: 8.0),
-                  bottom: BorderSide(color: Colors.blue[200]!, width: 8.0),
+                    BorderRadius.circular(15.0), // Закругляем все углы
+                border: Border.all(
+                  color: Colors.blue[200]!, // Цвет рамки для текстового поля
+                  width: 7.0, // Толщина рамки
                 ),
               ),
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 data.value.isEmpty ? '...' : data.value,
                 style: const TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 13.0,
                   color: Colors.black,
                 ),
               ),
