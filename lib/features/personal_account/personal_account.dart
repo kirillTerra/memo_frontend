@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:my_app/features/personal_account/audio_player.dart';
-import 'package:my_app/features/personal_account/audio_recorder.dart';
+// import 'package:my_app/features/personal_account/audio_recorder.dart';
+import 'package:my_app/features/personal_account/widgets/recorder/widget_recorder.dart';
+import 'package:my_app/features/personal_account/widgets/audio_player/audio_player.dart';
 
 class PersonalAccountScreen extends StatefulWidget {
   const PersonalAccountScreen({super.key});

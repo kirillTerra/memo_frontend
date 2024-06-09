@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/features/document/widgets/user_bold.dart';
-import 'package:my_app/features/document/widgets/voice_record.dart';
-import 'package:my_app/features/document/widgets/add_user_bold_button.dart';
+import 'package:my_app/features/document/widgets/user_bold/user_bold.dart';
+import 'package:my_app/features/document/widgets/user_bold/add_user_bold_button.dart';
 import 'package:my_app/repositories/models/document_list.dart';
 import 'package:my_app/repositories/documennt/get_document_fields.dart';
 import 'package:my_app/repositories/documennt/create_filed.dart';
 import 'package:my_app/repositories/documennt/delete_field.dart';
 import 'package:flutter/foundation.dart';
+import 'package:my_app/features/document/widgets/audio_player/audio_player.dart';
+import 'package:my_app/features/document/widgets/audio_recorder/widget_recorder.dart';
 
 class DocumentScreen extends StatefulWidget {
   final Document document;
@@ -17,14 +18,16 @@ class DocumentScreen extends StatefulWidget {
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
+  bool showPlayer = false;
   List<FieldModel> userTexts = [];
   String? audioPath;
+
   @override
   void initState() {
     super.initState();
-    // Инициализация на основе переданного документа
     userTexts = widget.document.fields;
     _loadDocumentFields();
+    showPlayer = false;
   }
 
   Future<void> _loadDocumentFields() async {
@@ -74,6 +77,80 @@ class _DocumentScreenState extends State<DocumentScreen> {
     }
   }
 
+  void _handleDelete(int index, FieldModel field, Document document) {
+    deleteFiled(document.oid, field.oid);
+    setState(() {
+      userTexts.removeAt(index);
+    });
+  }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.document.name),
+//         toolbarHeight: kToolbarHeight + 70.0, // Увеличение высоты AppBar
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//         flexibleSpace: Padding(
+//           padding: const EdgeInsets.only(top: kToolbarHeight),
+//           child: showPlayer
+//               ? AudioPlayer(
+//                   source: audioPath!,
+//                   onDelete: () {
+//                     setState(() => showPlayer = false);
+//                   },
+//                 )
+//               : Recorder(
+//                   onStop: (path) {
+//                     if (kDebugMode) print('Recorded file path: $path');
+//                     setState(() {
+//                       audioPath = path;
+//                       showPlayer = true;
+//                     });
+//                   },
+//                 ),
+//         ),
+//       ),
+//       body: Stack(
+//         children: [
+//           Column(
+//             children: <Widget>[
+//               const SizedBox(height: 20), // Дополнительное пространство
+//               Expanded(
+//                 child: ListView.builder(
+//                   itemCount: userTexts.length,
+//                   itemBuilder: (context, index) {
+//                     return UserBold(
+//                       key: Key('${userTexts[index].hashCode}'),
+//                       data: userTexts[index],
+//                       onDelete: () {
+//                         _handleDelete(index, userTexts[index], widget.document);
+//                       },
+//                     );
+//                   },
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Positioned(
+//             bottom: 20.0, // Отступ от нижней части экрана
+//             left: 0,
+//             right: 0,
+//             child: AddUserBoldButton(
+//               onPressed: _showAddTitleDialog,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +171,26 @@ class _DocumentScreenState extends State<DocumentScreen> {
         children: [
           Column(
             children: <Widget>[
-              // VoiceRecord(),
+              Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: showPlayer
+                    ? AudioPlayer(
+                        source: audioPath!,
+                        onDelete: () {
+                          setState(() => showPlayer = false);
+                        },
+                      )
+                    : Recorder(
+                        onStop: (path) {
+                          if (kDebugMode) print('Recorded file path: $path');
+                          setState(() {
+                            audioPath = path;
+                            showPlayer = true;
+                          });
+                        },
+                        documenntOid: widget.document.oid,
+                      ),
+              ),
               const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
@@ -112,14 +208,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
               ),
             ],
           ),
-          Recorder(
-            onStop: (path) {
-              if (kDebugMode) print('Recorded file path: $path');
-              setState(() {
-                audioPath = path;
-              });
-            },
-          ),
           Positioned(
             bottom:
                 0.0, // Отступ от нижней части экрана, чтобы кнопка была над панелью навигации
@@ -132,14 +220,5 @@ class _DocumentScreenState extends State<DocumentScreen> {
         ],
       ),
     );
-  }
-
-  void _handleDelete(int index, FieldModel field, Document document) {
-    deleteFiled(document.oid, field.oid);
-    setState(() {
-      userTexts.removeAt(index);
-    });
-    // Выполнение вашей функции перед удалением
-    // Удаление элемента
   }
 }

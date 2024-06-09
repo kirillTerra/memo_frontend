@@ -1,9 +1,11 @@
+// lib/components/audio_player/audio_player.dart
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart' as ap;
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'rounded_box.dart'; // Импортируем класс RoundedBox
+import 'audio_controls.dart';
+import 'audio_slider.dart';
+import 'package:my_app/features/personal_account/rounded_box.dart'; // Импортируем RoundedBox
 
 class AudioPlayer extends StatefulWidget {
   final String source;
@@ -19,11 +21,12 @@ class AudioPlayer extends StatefulWidget {
   AudioPlayerState createState() => AudioPlayerState();
 }
 
+// lib/components/audio_player/audio_player_state.dart
+
 class AudioPlayerState extends State<AudioPlayer> {
-  static const double _controlSize = 32; // Уменьшенный размер кнопок и ClipOval
   static const double _deleteBtnSize = 24;
 
-  final _audioPlayer = ap.AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+  final _audioPlayer = ap.AudioPlayer()..setReleaseMode(ap.ReleaseMode.stop);
   late StreamSubscription<void> _playerStateChangedSubscription;
   late StreamSubscription<Duration?> _durationChangedSubscription;
   late StreamSubscription<Duration> _positionChangedSubscription;
@@ -65,13 +68,21 @@ class AudioPlayerState extends State<AudioPlayer> {
   Widget build(BuildContext context) {
     return RoundedBox(
       child: SizedBox(
-        height: 60, // Устанавливаем фиксированную высоту для панели
+        height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _buildControl(),
+            AudioControls(
+              audioPlayer: _audioPlayer,
+              onPlay: play,
+              onPause: pause,
+            ),
             Expanded(
-              child: _buildSlider(),
+              child: AudioSlider(
+                audioPlayer: _audioPlayer,
+                position: _position,
+                duration: _duration,
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.delete,
@@ -90,64 +101,6 @@ class AudioPlayerState extends State<AudioPlayer> {
     );
   }
 
-  Widget _buildControl() {
-    Icon icon;
-    Color color;
-
-    if (_audioPlayer.state == ap.PlayerState.playing) {
-      icon = const Icon(Icons.pause,
-          color: Colors.red, size: 20); // Уменьшенный размер иконок
-      color = Colors.red.withOpacity(0.1);
-    } else {
-      final theme = Theme.of(context);
-      icon = Icon(Icons.play_arrow,
-          color: theme.primaryColor, size: 20); // Уменьшенный размер иконок
-      color = theme.primaryColor.withOpacity(0.1);
-    }
-
-    return ClipOval(
-      child: Material(
-        color: color,
-        child: InkWell(
-          child:
-              SizedBox(width: _controlSize, height: _controlSize, child: icon),
-          onTap: () {
-            if (_audioPlayer.state == ap.PlayerState.playing) {
-              pause();
-            } else {
-              play();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSlider() {
-    bool canSetValue = false;
-    final duration = _duration;
-    final position = _position;
-
-    if (duration != null && position != null) {
-      canSetValue = position.inMilliseconds > 0;
-      canSetValue &= position.inMilliseconds < duration.inMilliseconds;
-    }
-
-    return Slider(
-      activeColor: Theme.of(context).primaryColor,
-      inactiveColor: Theme.of(context).colorScheme.secondary,
-      onChanged: (v) {
-        if (duration != null) {
-          final position = v * duration.inMilliseconds;
-          _audioPlayer.seek(Duration(milliseconds: position.round()));
-        }
-      },
-      value: canSetValue && duration != null && position != null
-          ? position.inMilliseconds / duration.inMilliseconds
-          : 0.0,
-    );
-  }
-
   Future<void> play() => _audioPlayer.play(_source);
 
   Future<void> pause() async {
@@ -160,6 +113,6 @@ class AudioPlayerState extends State<AudioPlayer> {
     setState(() {});
   }
 
-  Source get _source =>
+  ap.Source get _source =>
       kIsWeb ? ap.UrlSource(widget.source) : ap.DeviceFileSource(widget.source);
 }
