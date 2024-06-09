@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_app/repositories/models/document_list.dart';
-import 'package:my_app/repositories/documennt/delete_field.dart';
 
 class UserBold extends StatelessWidget {
   final FieldModel data;
@@ -16,20 +15,31 @@ class UserBold extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[100],
-          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.blue[50], // Светло-синий фон
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5), // Тень
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            // Верхняя часть с заголовком
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 6.0, vertical: 2.0), // Уменьшение отступов
               decoration: BoxDecoration(
-                color: Colors.blue[100],
+                color: Colors.blue[200], // Синий цвет
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(10.0)),
+                    const BorderRadius.vertical(top: Radius.circular(15.0)),
               ),
+              height:
+                  35, // Установка фиксированной высоты для уменьшения размера
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -38,6 +48,7 @@ class UserBold extends StatelessWidget {
                       data.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 12.0, // Уменьшенный размер текста
                         color: Colors.black,
                       ),
                     ),
@@ -52,34 +63,42 @@ class UserBold extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.copy),
-                        iconSize: 16.0,
+                        iconSize: 14.0, // Уменьшенный размер иконки
+                        padding: EdgeInsets.zero, // Убираем внутренние отступы
+                        constraints:
+                            BoxConstraints(), // Убираем ограничения на размер
                       ),
                       IconButton(
                         onPressed: onDelete,
                         icon: const Icon(Icons.close),
-                        iconSize: 16.0,
+                        iconSize: 14.0, // Уменьшенный размер иконки
+                        padding: EdgeInsets.zero, // Убираем внутренние отступы
+                        constraints:
+                            BoxConstraints(), // Убираем ограничения на размер
                       ),
                     ],
                   ),
                 ],
               ),
             ),
+            // Нижняя часть с содержимым
             Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(10.0)),
+                    const BorderRadius.vertical(bottom: Radius.circular(15.0)),
+                border: Border(
+                  left: BorderSide(color: Colors.blue[200]!, width: 8.0),
+                  right: BorderSide(color: Colors.blue[200]!, width: 8.0),
+                  bottom: BorderSide(color: Colors.blue[200]!, width: 8.0),
+                ),
               ),
-              child: TextFormField(
-                initialValue: data.value,
-                onChanged: (value) {
-                  data.value = value;
-                },
-                maxLines: null,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Введите текст',
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                data.value.isEmpty ? '...' : data.value,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
                 ),
               ),
             ),

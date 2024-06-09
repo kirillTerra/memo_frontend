@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class WebSocketManager {
   WebSocketChannel? _channel;
-  final void Function(Map<String, dynamic>)
+  final void Function(List<Map<String, dynamic>>)
       onMessageReceived; // Поле для callback
 
   WebSocketManager({required this.onMessageReceived});
@@ -41,7 +41,9 @@ class WebSocketManager {
   void _handleMessage(dynamic message) {
     try {
       String messageString = utf8.decode(message);
-      Map<String, dynamic> data = messageString as Map<String, dynamic>;
+      List<Map<String, dynamic>> data =
+          List<Map<String, dynamic>>.from(jsonDecode(messageString));
+
       print('Received message from WebSocket: $messageString');
       onMessageReceived(data);
     } catch (e) {

@@ -42,6 +42,26 @@ class _DocumentScreenState extends State<DocumentScreen> {
     });
   }
 
+  void _updateFields(List<Map<String, dynamic>> data) {
+    print('STARTUPDATE');
+    setState(() {
+      // Создаем карту из пришедших данных для быстрого поиска по oid
+      Map<String, dynamic> dataMap = {
+        for (var field in data) field['oid']: field['value']
+      };
+
+      // Обновляем userTexts на основе пришедших данных
+      for (var field in userTexts) {
+        if (dataMap.containsKey(field.oid)) {
+          field.value = dataMap[field.oid];
+          String value = field.value;
+          print('Ok $value');
+        }
+      }
+    });
+    print("ENDUPDATE");
+  }
+
   Future<void> _showAddTitleDialog() async {
     final TextEditingController controller = TextEditingController();
 
@@ -84,73 +104,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
     });
   }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.document.name),
-//         toolbarHeight: kToolbarHeight + 70.0, // Увеличение высоты AppBar
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//         flexibleSpace: Padding(
-//           padding: const EdgeInsets.only(top: kToolbarHeight),
-//           child: showPlayer
-//               ? AudioPlayer(
-//                   source: audioPath!,
-//                   onDelete: () {
-//                     setState(() => showPlayer = false);
-//                   },
-//                 )
-//               : Recorder(
-//                   onStop: (path) {
-//                     if (kDebugMode) print('Recorded file path: $path');
-//                     setState(() {
-//                       audioPath = path;
-//                       showPlayer = true;
-//                     });
-//                   },
-//                 ),
-//         ),
-//       ),
-//       body: Stack(
-//         children: [
-//           Column(
-//             children: <Widget>[
-//               const SizedBox(height: 20), // Дополнительное пространство
-//               Expanded(
-//                 child: ListView.builder(
-//                   itemCount: userTexts.length,
-//                   itemBuilder: (context, index) {
-//                     return UserBold(
-//                       key: Key('${userTexts[index].hashCode}'),
-//                       data: userTexts[index],
-//                       onDelete: () {
-//                         _handleDelete(index, userTexts[index], widget.document);
-//                       },
-//                     );
-//                   },
-//                 ),
-//               ),
-//             ],
-//           ),
-//           Positioned(
-//             bottom: 20.0, // Отступ от нижней части экрана
-//             left: 0,
-//             right: 0,
-//             child: AddUserBoldButton(
-//               onPressed: _showAddTitleDialog,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,6 +142,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                           });
                         },
                         documenntOid: widget.document.oid,
+                        updateFields: _updateFields,
                       ),
               ),
               const SizedBox(height: 20),

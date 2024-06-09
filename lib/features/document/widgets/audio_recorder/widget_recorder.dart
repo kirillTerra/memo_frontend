@@ -6,18 +6,24 @@ import 'package:my_app/features/personal_account/rounded_box.dart'; // Импо�
 
 class Recorder extends StatefulWidget {
   final void Function(String path) onStop;
+  final void Function(List<Map<String, dynamic>> data) updateFields;
+
   final String documenntOid;
 
-  const Recorder({super.key, required this.onStop, required this.documenntOid});
+  const Recorder(
+      {super.key,
+      required this.onStop,
+      required this.documenntOid,
+      required this.updateFields});
 
   @override
   State<Recorder> createState() => _RecorderState();
 }
 
 class _RecorderState extends State<Recorder> {
-  final AudioRecorderManager _audioRecorderManager = AudioRecorderManager();
-  final WebSocketManager _webSocketManager = WebSocketManager();
-  final TimerManager _timerManager = TimerManager();
+  late final AudioRecorderManager _audioRecorderManager;
+  late final WebSocketManager _webSocketManager;
+  late final TimerManager _timerManager;
 
   bool _isRecording = false;
   String? _filePath;
@@ -26,6 +32,11 @@ class _RecorderState extends State<Recorder> {
   @override
   void initState() {
     super.initState();
+
+    _audioRecorderManager = AudioRecorderManager();
+    _webSocketManager =
+        WebSocketManager(onMessageReceived: widget.updateFields);
+    _timerManager = TimerManager();
     _timerManager.onTick = (int seconds) {
       setState(() {
         _recordDuration = seconds;
